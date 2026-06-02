@@ -38,7 +38,7 @@
 
 </div>
 
-<!-- ================= AUTH MODAL ================= -->
+<!-- ================= AUTH ================= -->
 <div id="authModal" class="modal">
 
     <div class="modal-content">
@@ -55,8 +55,8 @@
             <option value="employer">Employer</option>
         </select>
 
-        <button id="loginBtn" onclick="login()">Login</button>
-        <button id="registerBtn" onclick="register()" style="display:none;">Register</button>
+        <button onclick="login()">Login</button>
+        <button onclick="register()" style="display:none;">Register</button>
 
     </div>
 
@@ -72,18 +72,17 @@
 
         <p id="userEmail"></p>
 
-        <!-- EMPLOYER -->
+        <!-- EMPLOYER MENU (UPDATED - My Jobs removed) -->
         <div id="employerMenu">
 
             <button onclick="showView('dashboard')">Dashboard</button>
             <button onclick="showView('postJob')">Post Job</button>
-            <button onclick="showView('myJobs')">My Jobs</button>
             <button onclick="showView('applicants')">Applicants</button>
             <button onclick="showView('messages')">Messages</button>
 
         </div>
 
-        <!-- JOBSEEKER -->
+        <!-- JOBSEEKER MENU -->
         <div id="jobseekerMenu">
 
             <button onclick="showView('findJobs')">Find Jobs</button>
@@ -93,7 +92,7 @@
 
         </div>
 
-        <!-- ADMIN -->
+        <!-- ADMIN MENU -->
         <div id="adminMenu" style="display:none;">
 
             <button onclick="showView('adminDashboard')">Admin Dashboard</button>
@@ -109,7 +108,7 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
 
-        <!-- ================= EMPLOYER DASHBOARD ================= -->
+        <!-- DASHBOARD -->
         <section id="view-dashboard" class="view">
 
             <h2>Employer Dashboard</h2>
@@ -137,6 +136,7 @@
 
         <!-- POST JOB -->
         <section id="view-postJob" class="view">
+
             <h2>Post Job</h2>
 
             <input id="jobTitle" placeholder="Title">
@@ -145,37 +145,41 @@
             <textarea id="jobDescription" placeholder="Description"></textarea>
 
             <button onclick="postJob()">Post Job</button>
-        </section>
 
-        <!-- MY JOBS -->
-        <section id="view-myJobs" class="view">
-            <h2>My Jobs</h2>
-            <div id="myJobsContainer"></div>
         </section>
 
         <!-- FIND JOBS -->
         <section id="view-findJobs" class="view">
+
             <h2>Find Jobs</h2>
 
             <input id="jobSearch" placeholder="Search jobs...">
 
             <div id="jobsContainer"></div>
+
         </section>
 
         <!-- APPLICANTS -->
         <section id="view-applicants" class="view">
+
             <h2>Applicants</h2>
+
             <div id="applicantsContainer"></div>
+
         </section>
 
         <!-- APPLICATIONS -->
         <section id="view-applications" class="view">
+
             <h2>My Applications</h2>
+
             <div id="applicationsContainer"></div>
+
         </section>
 
         <!-- PROFILE -->
         <section id="view-profile" class="view">
+
             <h2>Profile</h2>
 
             <input id="fullName" placeholder="Full Name">
@@ -185,6 +189,7 @@
             <input type="file" id="resumeUpload">
 
             <button onclick="saveProfile()">Save Profile</button>
+
         </section>
 
         <!-- MESSAGES -->
@@ -214,8 +219,7 @@
 
         </section>
 
-        <!-- ================= ADMIN ================= -->
-
+        <!-- ADMIN -->
         <section id="view-adminDashboard" class="view">
 
             <h2>Admin Dashboard</h2>
@@ -264,8 +268,6 @@
 <script src="js/jobs.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/profile.js"></script>
-
-<!-- ADMIN -->
 <script src="js/admin.js"></script>
 
 </body>
