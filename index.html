@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Remote Work Hub</title>
+    <title>Remote Work Hub SaaS</title>
+
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Firebase (compat for simplicity) -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
@@ -14,9 +15,7 @@
 
 <body>
 
-<!-- =========================
-     HOME PAGE
-========================= -->
+<!-- ================= HOME ================= -->
 <div id="homePage">
 
     <div class="hero-section">
@@ -25,65 +24,55 @@
             <div class="logo">RemoteWork Hub</div>
 
             <div class="nav-buttons">
-                <button class="btn-secondary" onclick="openAuth('login')">Login</button>
-                <button class="btn-primary" onclick="openAuth('register')">Register</button>
+                <button onclick="openAuth('login')">Login</button>
+                <button onclick="openAuth('register')">Register</button>
             </div>
         </div>
 
         <div class="hero-content">
-            <h1>Find Work. Hire Talent.</h1>
-            <p>Modern OLJ-style freelance marketplace for remote jobs.</p>
-
-            <div class="hero-buttons">
-                <button class="btn-primary" onclick="openAuth('register')">
-                    Get Started
-                </button>
-            </div>
+            <h1>Hire. Work. Earn.</h1>
+            <p>OLJ-style SaaS marketplace built with Firebase</p>
         </div>
 
     </div>
+
 </div>
 
-<!-- =========================
-     AUTH MODAL
-========================= -->
+<!-- ================= AUTH MODAL ================= -->
 <div id="authModal" class="modal">
 
     <div class="modal-content">
 
-        <span class="close-btn" onclick="closeAuth()">&times;</span>
+        <span onclick="closeAuth()" class="close-btn">&times;</span>
 
         <h2 id="authTitle">Login</h2>
 
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
+        <input id="email" type="email" placeholder="Email">
+        <input id="password" type="password" placeholder="Password">
 
         <select id="role">
             <option value="jobseeker">Job Seeker</option>
             <option value="employer">Employer</option>
         </select>
 
-        <button id="loginBtn" class="btn-primary" onclick="login()">Login</button>
-        <button id="registerBtn" class="btn-primary" onclick="register()" style="display:none;">Register</button>
+        <button id="loginBtn" onclick="login()">Login</button>
+        <button id="registerBtn" onclick="register()" style="display:none;">Register</button>
 
     </div>
+
 </div>
 
-<!-- =========================
-     MAIN APP
-========================= -->
+<!-- ================= APP ================= -->
 <div id="appContainer">
 
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-        <div class="sidebar-header">
-            Dashboard
-        </div>
+        <h2>Dashboard</h2>
 
         <p id="userEmail"></p>
 
-        <!-- EMPLOYER MENU -->
+        <!-- EMPLOYER -->
         <div id="employerMenu">
 
             <button onclick="showView('dashboard')">Dashboard</button>
@@ -94,7 +83,7 @@
 
         </div>
 
-        <!-- JOBSEEKER MENU -->
+        <!-- JOBSEEKER -->
         <div id="jobseekerMenu">
 
             <button onclick="showView('findJobs')">Find Jobs</button>
@@ -104,15 +93,25 @@
 
         </div>
 
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <!-- ADMIN -->
+        <div id="adminMenu" style="display:none;">
+
+            <button onclick="showView('adminDashboard')">Admin Dashboard</button>
+            <button onclick="showView('adminUsers')">Users</button>
+            <button onclick="showView('adminJobs')">Jobs</button>
+
+        </div>
+
+        <button onclick="logout()">Logout</button>
 
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
 
-        <!-- DASHBOARD -->
+        <!-- ================= EMPLOYER DASHBOARD ================= -->
         <section id="view-dashboard" class="view">
+
             <h2>Employer Dashboard</h2>
 
             <div class="stats-grid">
@@ -133,18 +132,19 @@
                 </div>
 
             </div>
+
         </section>
 
         <!-- POST JOB -->
         <section id="view-postJob" class="view">
             <h2>Post Job</h2>
 
-            <input id="jobTitle" placeholder="Job Title">
+            <input id="jobTitle" placeholder="Title">
             <input id="jobCompany" placeholder="Company">
             <input id="jobSalary" placeholder="Salary">
             <textarea id="jobDescription" placeholder="Description"></textarea>
 
-            <button class="btn-primary" onclick="postJob()">Post Job</button>
+            <button onclick="postJob()">Post Job</button>
         </section>
 
         <!-- MY JOBS -->
@@ -162,16 +162,16 @@
             <div id="jobsContainer"></div>
         </section>
 
-        <!-- APPLICATIONS -->
-        <section id="view-applications" class="view">
-            <h2>My Applications</h2>
-            <div id="applicationsContainer"></div>
-        </section>
-
         <!-- APPLICANTS -->
         <section id="view-applicants" class="view">
             <h2>Applicants</h2>
             <div id="applicantsContainer"></div>
+        </section>
+
+        <!-- APPLICATIONS -->
+        <section id="view-applications" class="view">
+            <h2>My Applications</h2>
+            <div id="applicationsContainer"></div>
         </section>
 
         <!-- PROFILE -->
@@ -184,9 +184,7 @@
 
             <input type="file" id="resumeUpload">
 
-            <button class="btn-primary" onclick="saveProfile()">
-                Save Profile
-            </button>
+            <button onclick="saveProfile()">Save Profile</button>
         </section>
 
         <!-- MESSAGES -->
@@ -203,8 +201,11 @@
                     <div id="chatMessages"></div>
 
                     <div class="chat-input-area">
-                        <input id="messageInput" placeholder="Type message...">
+
+                        <input id="messageInput" placeholder="Message...">
+
                         <button onclick="sendMessage()">Send</button>
+
                     </div>
 
                 </div>
@@ -213,12 +214,48 @@
 
         </section>
 
+        <!-- ================= ADMIN ================= -->
+
+        <section id="view-adminDashboard" class="view">
+
+            <h2>Admin Dashboard</h2>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3 id="totalUsers">0</h3>
+                    <p>Users</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="totalJobsAdmin">0</h3>
+                    <p>Jobs</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="totalApplicationsAdmin">0</h3>
+                    <p>Applications</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="view-adminUsers" class="view">
+            <h2>Users</h2>
+            <div id="adminUsersContainer"></div>
+        </section>
+
+        <section id="view-adminJobs" class="view">
+            <h2>Jobs</h2>
+            <div id="adminJobsContainer"></div>
+        </section>
+
     </div>
+
 </div>
 
-<!-- =========================
-     SCRIPTS (ORDER IMPORTANT)
-========================= -->
+<!-- ================= SCRIPTS ================= -->
 
 <script src="js/firebase-config.js"></script>
 <script src="js/auth.js"></script>
@@ -227,6 +264,9 @@
 <script src="js/jobs.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/profile.js"></script>
+
+<!-- ADMIN -->
+<script src="js/admin.js"></script>
 
 </body>
 </html>
