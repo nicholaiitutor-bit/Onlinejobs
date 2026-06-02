@@ -9,47 +9,29 @@ async function postJob() {
         return;
     }
 
-    const title =
-        document.getElementById("jobTitle").value;
-
-    const company =
-        document.getElementById("jobCompany").value;
-
-    const salary =
-        document.getElementById("jobSalary").value;
-
-    const description =
-        document.getElementById("jobDescription").value;
+    const title = document.getElementById("jobTitle").value;
+    const company = document.getElementById("jobCompany").value;
+    const salary = document.getElementById("jobSalary").value;
+    const description = document.getElementById("jobDescription").value;
 
     if (!title || !company || !description) {
         alert("Please complete all required fields.");
         return;
     }
 
-    try {
+    await db.collection("jobs").add({
+        title,
+        company,
+        salary,
+        description,
+        ownerId: currentUser.uid,
+        createdAt: getTimestamp(),
+        active: true
+    });
 
-        await db.collection("jobs").add({
-            title,
-            company,
-            salary,
-            description,
-            ownerId: currentUser.uid,
-            createdAt: getTimestamp(),
-            active: true
-        });
+    alert("Job posted!");
 
-        alert("Job posted successfully!");
-
-        document.getElementById("jobTitle").value = "";
-        document.getElementById("jobCompany").value = "";
-        document.getElementById("jobSalary").value = "";
-        document.getElementById("jobDescription").value = "";
-
-        loadMyJobs();
-
-    } catch (error) {
-        console.error(error);
-    }
+    loadMyJobs();
 }
 
 // =====================================
@@ -58,59 +40,37 @@ async function postJob() {
 
 async function loadJobs() {
 
-    const container =
-        document.getElementById("jobsContainer");
-
+    const container = document.getElementById("jobsContainer");
     if (!container) return;
 
     container.innerHTML = "";
 
-    try {
+    const snapshot = await db.collection("jobs")
+        .where("active", "==", true)
+        .orderBy("createdAt", "desc")
+        .get();
 
-        const snapshot =
-            await db.collection("jobs")
-            .where("active", "==", true)
-            .orderBy("createdAt", "desc")
-            .get();
+    snapshot.forEach(doc => {
 
-        if (snapshot.empty) {
-            renderEmptyState(
-                "jobsContainer",
-                "No jobs available"
-            );
-            return;
-        }
+        const job = doc.data();
 
-        snapshot.forEach(doc => {
+        container.innerHTML += `
+            <div class="job-card">
 
-            const job = doc.data();
+                <h3>${job.title}</h3>
+                <p>${job.company}</p>
+                <p>${job.salary || ""}</p>
+                <p>${job.description}</p>
 
-            container.innerHTML += `
-                <div class="job-card">
+                ${currentUserRole === "jobseeker" ? `
+                    <button onclick="applyJob('${doc.id}')">
+                        Apply
+                    </button>
+                ` : ""}
 
-                    <h3>${job.title}</h3>
-
-                    <p>${job.company}</p>
-
-                    <p>${job.salary || ""}</p>
-
-                    <p>${job.description}</p>
-
-                    ${
-                        currentUserRole === "jobseeker"
-                        ? `<button onclick="applyJob('${doc.id}')">
-                            Apply
-                           </button>`
-                        : ""
-                    }
-
-                </div>
-            `;
-        });
-
-    } catch (error) {
-        console.error(error);
-    }
+            </div>
+        `;
+    });
 }
 
 // =====================================
@@ -119,159 +79,112 @@ async function loadJobs() {
 
 async function loadMyJobs() {
 
-    if (!currentUser) return;
-
-    const container =
-        document.getElementById("myJobsContainer");
-
+    const container = document.getElementById("myJobsContainer");
     if (!container) return;
 
     container.innerHTML = "";
 
-    try {
+    const snapshot = await db.collection("jobs")
+        .where("ownerId", "==", currentUser.uid)
+        .orderBy("createdAt", "desc")
+        .get();
 
-        const snapshot =
-            await db.collection("jobs")
-            .where("ownerId", "==", currentUser.uid)
-            .orderBy("createdAt", "desc")
-            .get();
+    snapshot.forEach(doc => {
 
-        if (snapshot.empty) {
-            renderEmptyState(
-                "myJobsContainer",
-                "No jobs posted yet"
-            );
-            return;
-        }
+        const job = doc.data();
 
-        snapshot.forEach(doc => {
+        container.innerHTML += `
+            <div class="job-card">
 
-            const job = doc.data();
+                <h3>${job.title}</h3>
+                <p>${job.company}</p>
 
-            container.innerHTML += `
-                <div class="job-card">
+                <button onclick="viewApplicants('${doc.id}', '${job.title}')">
+                    View Applicants
+                </button>
 
-                    <h3>${job.title}</h3>
-
-                    <p>${job.company}</p>
-
-                    <p>${job.salary || ""}</p>
-
-                    <p>${job.description}</p>
-
-                    <button onclick="viewApplicants('${doc.id}')">
-                        View Applicants
-                    </button>
-
-                </div>
-            `;
-        });
-
-    } catch (error) {
-        console.error(error);
-    }
+            </div>
+        `;
+    });
 }
 
 // =====================================
-// APPLY TO JOB (JOBSEEKER)
+// APPLY JOB (JOBSEEKER)
 // =====================================
 
 async function applyJob(jobId) {
 
-    if (!currentUser || currentUserRole !== "jobseeker") {
+    if (currentUserRole !== "jobseeker") {
         alert("Only jobseekers can apply.");
         return;
     }
 
-    try {
+    const existing = await db.collection("applications")
+        .where("jobId", "==", jobId)
+        .where("applicantId", "==", currentUser.uid)
+        .get();
 
-        const alreadyApplied =
-            await db.collection("applications")
-            .where("jobId", "==", jobId)
-            .where("applicantId", "==", currentUser.uid)
-            .get();
-
-        if (!alreadyApplied.empty) {
-            alert("You already applied to this job.");
-            return;
-        }
-
-        await db.collection("applications").add({
-            jobId,
-            applicantId: currentUser.uid,
-            status: "pending",
-            createdAt: getTimestamp()
-        });
-
-        alert("Application submitted!");
-
-        loadJobs();
-
-    } catch (error) {
-        console.error(error);
+    if (!existing.empty) {
+        alert("Already applied.");
+        return;
     }
+
+    await db.collection("applications").add({
+        jobId,
+        applicantId: currentUser.uid,
+        status: "pending",
+        createdAt: getTimestamp()
+    });
+
+    alert("Applied successfully!");
 }
 
 // =====================================
 // VIEW APPLICANTS (EMPLOYER)
 // =====================================
 
-async function viewApplicants(jobId) {
+async function viewApplicants(jobId, jobTitle) {
 
     showView("applicants");
 
-    const container =
-        document.getElementById("applicantsContainer");
-
+    const container = document.getElementById("applicantsContainer");
     container.innerHTML = "";
 
-    try {
+    const snapshot = await db.collection("applications")
+        .where("jobId", "==", jobId)
+        .get();
 
-        const snapshot =
-            await db.collection("applications")
-            .where("jobId", "==", jobId)
+    for (const doc of snapshot.docs) {
+
+        const app = doc.data();
+
+        const userDoc = await db.collection("users")
+            .doc(app.applicantId)
             .get();
 
-        if (snapshot.empty) {
-            renderEmptyState(
-                "applicantsContainer",
-                "No applicants yet"
-            );
-            return;
-        }
+        const user = userDoc.data();
 
-        for (const doc of snapshot.docs) {
+        container.innerHTML += `
+            <div class="applicant-card">
 
-            const app = doc.data();
+                <h3>${user.email}</h3>
 
-            const userDoc =
-                await db.collection("users")
-                .doc(app.applicantId)
-                .get();
+                <p>Status: ${app.status}</p>
 
-            const user = userDoc.data();
+                <button onclick="updateApplicationStatus('${doc.id}', 'accepted')">
+                    Accept
+                </button>
 
-            container.innerHTML += `
-                <div class="applicant-card">
+                <button onclick="updateApplicationStatus('${doc.id}', 'rejected')">
+                    Reject
+                </button>
 
-                    <h3>${user.email}</h3>
+                <button onclick="messageApplicant('${app.applicantId}', '${jobId}', '${jobTitle}')">
+                    Message
+                </button>
 
-                    <p>Status: ${app.status}</p>
-
-                    <button onclick="updateApplicationStatus('${doc.id}', 'accepted')">
-                        Accept
-                    </button>
-
-                    <button onclick="updateApplicationStatus('${doc.id}', 'rejected')">
-                        Reject
-                    </button>
-
-                </div>
-            `;
-        }
-
-    } catch (error) {
-        console.error(error);
+            </div>
+        `;
     }
 }
 
@@ -281,19 +194,11 @@ async function viewApplicants(jobId) {
 
 async function updateApplicationStatus(appId, status) {
 
-    try {
-
-        await db.collection("applications")
+    await db.collection("applications")
         .doc(appId)
-        .update({
-            status
-        });
+        .update({ status });
 
-        alert("Application " + status);
-
-    } catch (error) {
-        console.error(error);
-    }
+    alert("Application " + status);
 }
 
 // =====================================
@@ -302,29 +207,24 @@ async function updateApplicationStatus(appId, status) {
 
 function searchJobs(keyword) {
 
-    const items =
-        document.querySelectorAll(".job-card");
+    const items = document.querySelectorAll(".job-card");
 
     items.forEach(item => {
 
-        const text =
-            item.innerText.toLowerCase();
+        const text = item.innerText.toLowerCase();
 
         item.style.display =
             text.includes(keyword.toLowerCase())
-            ? "block"
-            : "none";
-
+                ? "block"
+                : "none";
     });
-
 }
 
 // =====================================
-// LIVE SEARCH HOOK
+// LIVE SEARCH
 // =====================================
 
-const jobSearchInput =
-    document.getElementById("jobSearch");
+const jobSearchInput = document.getElementById("jobSearch");
 
 if (jobSearchInput) {
 
