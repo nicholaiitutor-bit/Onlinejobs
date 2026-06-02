@@ -1,1 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Remote Work Hub</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+</head>
+
+<body>
+
+<!-- ================= HOME PAGE ================= -->
+
+<section id="homePage" class="hero-section">
+
+  <nav class="navbar">
+
+    <div class="logo">
+      💼 Remote Work Hub
+    </div>
+
+    <div class="nav-buttons">
+      <button onclick="openAuth('login')" class="btn-secondary">
+        Login
+      </button>
+
+      <button onclick="openAuth('register')" class="btn-primary">
+        Sign Up
+      </button>
+    </div>
+
+  </nav>
+
+  <div class="hero-content">
+
+    <h1>Hire Top Remote Talent</h1>
+
+    <p>
+      Find virtual assistants, customer support,
+      marketers, developers, designers and more.
+    </p>
+
+    <div class="hero-buttons">
+
+      <button onclick="openAuth('register')" class="btn-primary">
+        Get Started
+      </button>
+
+      <button onclick="openAuth('login')" class="btn-secondary">
+        Login
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= AUTH MODAL ================= -->
+
+<div id="authModal" class="modal">
+
+  <div class="modal-content">
+
+    <span class="close-btn" onclick="closeAuth()">
+      &times;
+    </span>
+
+    <h2 id="authTitle">
+      Login
+    </h2>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Email Address">
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Password">
+
+    <select id="role">
+
+      <option value="jobseeker">
+        Job Seeker
+      </option>
+
+      <option value="employer">
+        Employer
+      </option>
+
+    </select>
+
+    <button
+      id="loginBtn"
+      onclick="login()"
+      class="btn-primary">
+      Login
+    </button>
+
+    <button
+      id="registerBtn"
+      onclick="register()"
+      class="btn-success">
+      Register
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ================= APP ================= -->
+
+<div id="appContainer">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      Remote Work Hub
+    </div>
+
+    <!-- EMPLOYER MENU -->
+
+    <div id="employerMenu" style="display:none;">
+
+      <button onclick="showView('dashboard')">
+        <i class="fas fa-chart-line"></i>
+        Dashboard
+      </button>
+
+      <button onclick="showView('postJob')">
+        <i class="fas fa-plus-circle"></i>
+        Post Job
+      </button>
+
+      <button onclick="showView('myJobs')">
+        <i class="fas fa-briefcase"></i>
+        My Jobs
+      </button>
+
+      <button onclick="showView('applicants')">
+        <i class="fas fa-users"></i>
+        Applicants
+      </button>
+
+      <button onclick="showView('messages')">
+        <i class="fas fa-comments"></i>
+        Messages
+      </button>
+
+    </div>
+
+    <!-- JOBSEEKER MENU -->
+
+    <div id="jobseekerMenu" style="display:none;">
+
+      <button onclick="showView('findJobs')">
+        <i class="fas fa-search"></i>
+        Find Jobs
+      </button>
+
+      <button onclick="showView('applications')">
+        <i class="fas fa-file-alt"></i>
+        Applications
+      </button>
+
+      <button onclick="showView('messages')">
+        <i class="fas fa-comments"></i>
+        Messages
+      </button>
+
+      <button onclick="showView('profile')">
+        <i class="fas fa-user"></i>
+        Profile
+      </button>
+
+    </div>
+
+    <button onclick="logout()" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i>
+      Logout
+    </button>
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main-content">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+      <div>
+        Welcome,
+        <span id="userEmail"></span>
+      </div>
+
+    </div>
+
+    <!-- DASHBOARD -->
+
+    <section id="view-dashboard" class="view">
+
+      <h2>Dashboard</h2>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <h3 id="totalJobs">0</h3>
+          <p>Jobs Posted</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="totalApplicants">0</h3>
+          <p>Applicants</p>
+        </div>
+
+        <div class="stat-card">
+          <h3 id="totalMessages">0</h3>
+          <p>Messages</p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- POST JOB -->
+
+    <section id="view-postJob" class="view">
+
+      <h2>Post Job</h2>
+
+      <input
+        type="text"
+        id="jobTitle"
+        placeholder="Job Title">
+
+      <input
+        type="text"
+        id="jobCompany"
+        placeholder="Company Name">
+
+      <input
+        type="text"
+        id="jobSalary"
+        placeholder="Salary">
+
+      <textarea
+        id="jobDescription"
+        placeholder="Job Description">
+      </textarea>
+
+      <button onclick="postJob()"
+      class="btn-primary">
+        Publish Job
+      </button>
+
+    </section>
+
+    <!-- MY JOBS -->
+
+    <section id="view-myJobs" class="view">
+
+      <h2>My Jobs</h2>
+
+      <div id="myJobsContainer"></div>
+
+    </section>
+
+    <!-- APPLICANTS -->
+
+    <section id="view-applicants" class="view">
+
+      <h2>Applicants</h2>
+
+      <div id="applicantsContainer"></div>
+
+    </section>
+
+    <!-- FIND JOBS -->
+
+    <section id="view-findJobs" class="view">
+
+      <h2>Find Jobs</h2>
+
+      <input
+        type="text"
+        id="jobSearch"
+        placeholder="Search Jobs">
+
+      <div id="jobsContainer"></div>
+
+    </section>
+
+    <!-- APPLICATIONS -->
+
+    <section id="view-applications" class="view">
+
+      <h2>My Applications</h2>
+
+      <div id="applicationsContainer"></div>
+
+    </section>
+
+    <!-- PROFILE -->
+
+    <section id="view-profile" class="view">
+
+      <h2>Profile</h2>
+
+      <input
+        type="text"
+        id="fullName"
+        placeholder="Full Name">
+
+      <input
+        type="text"
+        id="jobTitleProfile"
+        placeholder="Professional Title">
+
+      <textarea
+        id="bio"
+        placeholder="Tell employers about yourself">
+      </textarea>
+
+      <input
+        type="file"
+        id="resumeUpload">
+
+      <button onclick="saveProfile()">
+        Save Profile
+      </button>
+
+    </section>
+
+    <!-- MESSAGES -->
+
+    <section id="view-messages" class="view">
+
+      <h2>Messages</h2>
+
+      <div class="messages-layout">
+
+        <div id="chatList"></div>
+
+        <div class="chat-panel">
+
+          <div id="chatMessages"></div>
+
+          <div class="chat-input-area">
+
+            <input
+              type="text"
+              id="messageInput"
+              placeholder="Type message">
+
+            <button onclick="sendMessage()">
+              Send
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- APP FILES -->
+
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/jobs.js"></script>
+<script src="js/applications.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
