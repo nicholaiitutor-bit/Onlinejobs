@@ -1,19 +1,32 @@
 body {
     margin: 0;
-    font-family: Arial;
-    background: #f4f6f9;
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fb;
+    transition: 0.3s;
 }
 
-#appContainer {
-    display: flex;
+/* ================= DARK MODE ================= */
+body.dark {
+    background: #0b1220;
+    color: #e5e7eb;
 }
 
-/* SIDEBAR */
-.sidebar {
-    width: 250px;
+body.dark .sidebar {
+    background: #0a0f1c;
+}
+
+body.dark .job-card,
+body.dark .stat-card,
+body.dark .chart-box {
     background: #111827;
     color: white;
-    min-height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    width: 260px;
+    background: #0f172a;
+    color: white;
     padding: 20px;
 }
 
@@ -22,45 +35,77 @@ body {
     margin: 5px 0;
     padding: 10px;
     border: none;
-    background: #1f2937;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
     color: white;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
 }
 
-/* MAIN */
+.sidebar button:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.sidebar button.active {
+    background: #3b82f6;
+}
+
+/* ================= MAIN ================= */
 .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
 }
 
-/* VIEWS */
-.view {
-    display: none;
-}
-
-/* CARDS */
-.job-card, .applicant-card, .stat-card {
+/* ================= CARDS ================= */
+.job-card,
+.stat-card,
+.chart-box {
     background: white;
     padding: 15px;
     margin: 10px 0;
-    border-radius: 10px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
-/* STATS */
+/* ================= JOB TAGS ================= */
+.tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-right: 5px;
+    background: #e5e7eb;
+}
+
+.tag.remote { background: #dbeafe; color: #1d4ed8; }
+.tag.fulltime { background: #dcfce7; color: #166534; }
+.tag.parttime { background: #fef3c7; color: #92400e; }
+
+/* ================= DASHBOARD GRID ================= */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 15px;
 }
 
-/* CHAT */
-.messages-layout {
-    display: flex;
-    gap: 10px;
-}
-
-.chat-panel {
-    flex: 1;
-    background: white;
+/* ================= INPUTS ================= */
+input, textarea {
+    width: 100%;
     padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+/* ================= ANIMATION ================= */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(10px);}
+    to {opacity:1; transform: translateY(0);}
 }
