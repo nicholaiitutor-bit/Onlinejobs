@@ -8,6 +8,8 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -80,10 +82,10 @@
         <!-- EMPLOYER MENU -->
         <div id="employerMenu">
 
-            <button onclick="showView('dashboard')">Dashboard</button>
-            <button onclick="showView('postJob')">Post Job</button>
-            <button onclick="showView('jobDetail')">My Job View</button>
-            <button onclick="showView('messages')">Messages</button>
+            <button onclick="showView('dashboard')">📊 Dashboard</button>
+            <button onclick="showView('postJob')">➕ Post Job</button>
+            <button onclick="showView('myJobs')">💼 My Jobs</button>
+            <button onclick="showView('messages')">💬 Messages</button>
 
         </div>
 
@@ -120,6 +122,13 @@
             <div class="stats-grid">
 
                 <div class="stat-card">
+                    <div class="chart-box">
+
+    <h3>Job Analytics</h3>
+
+    <canvas id="jobChart" width="600" height="250"></canvas>
+
+</div>
                     <h3 id="totalJobs">0</h3>
                     <p>Jobs Posted</p>
                 </div>
@@ -131,11 +140,33 @@
 
                 <div class="stat-card">
                     <h3 id="totalMessages">0</h3>
-                    <p>Messages</p>
-                </div>
+                    <section id="view-messages" class="view">
+
+    <h2>Messages</h2>
+
+    <div class="messages-layout">
+
+        <div id="chatList"></div>
+
+        <div class="chat-panel">
+
+            <div id="chatMessages"></div>
+
+            <div class="chat-input-area">
+
+                <input id="messageInput" placeholder="Message...">
+
+                <button onclick="sendMessage()">
+                    Send
+                </button>
 
             </div>
-        </section>
+
+        </div>
+
+    </div>
+
+</section>
 
         <!-- POST JOB -->
         <section id="view-postJob" class="view">
@@ -153,6 +184,13 @@
         <section id="view-jobDetail" class="view">
 
             <h2>Job Details</h2>
+            <section id="view-myJobs" class="view">
+
+    <h2>My Posted Jobs</h2>
+
+    <div id="myJobsContainer"></div>
+
+</section>
 
             <div id="jobDetailContainer"></div>
 
@@ -197,14 +235,32 @@
 
         <!-- MESSAGES -->
         <section id="view-messages" class="view">
-            <h2>Messages</h2>
 
-            <div id="chatList"></div>
+    <h2>Messages</h2>
+
+    <div class="messages-layout">
+
+        <div id="chatList"></div>
+
+        <div class="chat-panel">
+
             <div id="chatMessages"></div>
 
-            <input id="messageInput" placeholder="Message...">
-            <button onclick="sendMessage()">Send</button>
-        </section>
+            <div class="chat-input-area">
+
+                <input id="messageInput" placeholder="Message...">
+
+                <button onclick="sendMessage()">
+                    Send
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
         <!-- ADMIN DASHBOARD -->
         <section id="view-adminDashboard" class="view">
