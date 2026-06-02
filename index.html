@@ -38,7 +38,7 @@
 
 </div>
 
-<!-- ================= AUTH ================= -->
+<!-- ================= AUTH MODAL ================= -->
 <div id="authModal" class="modal">
 
     <div class="modal-content">
@@ -62,17 +62,17 @@
 
 </div>
 
-<!-- ================= APP ================= -->
+<!-- ================= APP CONTAINER ================= -->
 <div id="appContainer">
 
-    <!-- SIDEBAR -->
+    <!-- ================= SIDEBAR ================= -->
     <div class="sidebar">
 
         <h2>Dashboard</h2>
 
         <p id="userEmail"></p>
 
-        <!-- EMPLOYER MENU (UPDATED - My Jobs removed) -->
+        <!-- EMPLOYER MENU -->
         <div id="employerMenu">
 
             <button onclick="showView('dashboard')">Dashboard</button>
@@ -105,12 +105,11 @@
 
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- ================= MAIN CONTENT ================= -->
     <div class="main-content">
 
         <!-- DASHBOARD -->
         <section id="view-dashboard" class="view">
-
             <h2>Employer Dashboard</h2>
 
             <div class="stats-grid">
@@ -131,12 +130,10 @@
                 </div>
 
             </div>
-
         </section>
 
         <!-- POST JOB -->
         <section id="view-postJob" class="view">
-
             <h2>Post Job</h2>
 
             <input id="jobTitle" placeholder="Title">
@@ -145,41 +142,47 @@
             <textarea id="jobDescription" placeholder="Description"></textarea>
 
             <button onclick="postJob()">Post Job</button>
+        </section>
+
+        <!-- JOB DETAIL (CLICK FROM JOBS) -->
+        <section id="view-jobDetail" class="view">
+
+            <h2>Job Details</h2>
+
+            <div id="jobDetailContainer"></div>
+
+            <hr>
+
+            <h3>Applicants</h3>
+            <div id="jobDetailApplicants"></div>
 
         </section>
 
         <!-- FIND JOBS -->
         <section id="view-findJobs" class="view">
-
             <h2>Find Jobs</h2>
 
             <input id="jobSearch" placeholder="Search jobs...">
 
             <div id="jobsContainer"></div>
-
         </section>
 
         <!-- APPLICANTS -->
         <section id="view-applicants" class="view">
-
             <h2>Applicants</h2>
 
             <div id="applicantsContainer"></div>
-
         </section>
 
         <!-- APPLICATIONS -->
         <section id="view-applications" class="view">
-
             <h2>My Applications</h2>
 
             <div id="applicationsContainer"></div>
-
         </section>
 
         <!-- PROFILE -->
         <section id="view-profile" class="view">
-
             <h2>Profile</h2>
 
             <input id="fullName" placeholder="Full Name">
@@ -189,12 +192,10 @@
             <input type="file" id="resumeUpload">
 
             <button onclick="saveProfile()">Save Profile</button>
-
         </section>
 
         <!-- MESSAGES -->
         <section id="view-messages" class="view">
-
             <h2>Messages</h2>
 
             <div class="messages-layout">
@@ -216,12 +217,10 @@
                 </div>
 
             </div>
-
         </section>
 
-        <!-- ADMIN -->
+        <!-- ADMIN DASHBOARD -->
         <section id="view-adminDashboard" class="view">
-
             <h2>Admin Dashboard</h2>
 
             <div class="stats-grid">
@@ -242,16 +241,19 @@
                 </div>
 
             </div>
-
         </section>
 
+        <!-- ADMIN USERS -->
         <section id="view-adminUsers" class="view">
             <h2>Users</h2>
+
             <div id="adminUsersContainer"></div>
         </section>
 
+        <!-- ADMIN JOBS -->
         <section id="view-adminJobs" class="view">
             <h2>Jobs</h2>
+
             <div id="adminJobsContainer"></div>
         </section>
 
