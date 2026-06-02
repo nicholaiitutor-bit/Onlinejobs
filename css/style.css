@@ -450,3 +450,14 @@ h1,h2,h3{
     }
 
 }
+.active-menu{
+    background:#2563eb !important;
+}
+
+.empty-state{
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
