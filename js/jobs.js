@@ -1,65 +1,232 @@
 function postJob() {
 
-    db.collection("jobs").add({
-        title: jobTitle.value,
-        company: jobCompany.value,
-        salary: jobSalary.value,
-        description: jobDescription.value,
-        ownerId: currentUser.uid,
-        createdAt: new Date().toISOString()
-    });
+```
+db.collection("jobs").add({
+    title: document.getElementById("jobTitle").value,
+    company: document.getElementById("jobCompany").value,
+    salary: document.getElementById("jobSalary").value,
+    description: document.getElementById("jobDescription").value,
+    ownerId: currentUser.uid,
+    createdAt: new Date().toISOString()
+})
+.then(() => {
+    alert("Job posted successfully");
+    loadEmployerJobs();
+});
+```
 
-    alert("Job posted!");
 }
+
+// ================= JOB SEEKER JOBS =================
 
 function loadJobs() {
 
-    const container = document.getElementById("jobsContainer");
+```
+const container = document.getElementById("jobsContainer");
 
-    db.collection("jobs").onSnapshot(snap => {
+if (!container) return;
 
-        container.innerHTML = "";
+db.collection("jobs")
+.orderBy("createdAt", "desc")
+.onSnapshot(snapshot => {
 
-        snap.forEach(doc => {
+    container.innerHTML = "";
 
-            const job = doc.data();
+    snapshot.forEach(doc => {
 
-            container.innerHTML += `
-                <div class="job-card" onclick="openJob('${doc.id}')">
-                    <h3>${job.title}</h3>
-                    <p>${job.company}</p>
-                </div>
-            `;
-        });
+        const job = doc.data();
+
+        container.innerHTML += `
+            <div class="job-card" onclick="openJob('${doc.id}')">
+
+                <h3>${job.title}</h3>
+
+                <p>${job.company}</p>
+
+                <small>${job.salary || ""}</small>
+
+            </div>
+        `;
     });
+
+});
+```
+
 }
+
+// ================= EMPLOYER JOBS =================
 
 function loadEmployerJobs() {
-    loadJobs();
+
+```
+const container = document.getElementById("myJobsContainer");
+
+if (!container || !currentUser) return;
+
+db.collection("jobs")
+.where("ownerId", "==", currentUser.uid)
+.orderBy("createdAt", "desc")
+.onSnapshot(snapshot => {
+
+    container.innerHTML = "";
+
+    if (snapshot.empty) {
+
+        container.innerHTML = `
+            <div class="job-card">
+                <h3>No jobs posted yet</h3>
+            </div>
+        `;
+
+        return;
+    }
+
+    snapshot.forEach(doc => {
+
+        const job = doc.data();
+
+        container.innerHTML += `
+            <div class="job-card">
+
+                <h3>${job.title}</h3>
+
+                <p>${job.company}</p>
+
+                <p>${job.salary || ""}</p>
+
+                <button onclick="openJob('${doc.id}')">
+                    View Applicants
+                </button>
+
+            </div>
+        `;
+
+    });
+
+});
+```
+
 }
 
+// ================= OPEN JOB =================
+
 function openJob(jobId) {
-    loadJobDetail(jobId);
-    showView("jobDetail");
+
+```
+loadJobDetail(jobId);
+
+showView("jobDetail");
+```
+
 }
+
+// ================= JOB DETAILS =================
 
 async function loadJobDetail(jobId) {
 
-    const job = await db.collection("jobs").doc(jobId).get();
+```
+const jobDoc = await db.collection("jobs").doc(jobId).get();
 
-    document.getElementById("jobDetailContainer").innerHTML = `
-        <h2>${job.data().title}</h2>
-        <p>${job.data().description}</p>
+if (!jobDoc.exists) return;
+
+const job = jobDoc.data();
+
+document.getElementById("jobDetailContainer").innerHTML = `
+
+    <div class="job-card">
+
+        <h2>${job.title}</h2>
+
+        <p><strong>Company:</strong> ${job.company}</p>
+
+        <p><strong>Salary:</strong> ${job.salary || "Not specified"}</p>
+
+        <p>${job.description}</p>
+
+    </div>
+
+`;
+
+loadApplicants(jobId);
+```
+
+}
+
+// ================= LOAD APPLICANTS =================
+
+async function loadApplicants(jobId) {
+
+```
+const container =
+    document.getElementById("jobDetailApplicants");
+
+container.innerHTML = "";
+
+const snapshot = await db
+    .collection("applications")
+    .where("jobId", "==", jobId)
+    .get();
+
+if (snapshot.empty) {
+
+    container.innerHTML = `
+        <div class="applicant-card">
+            No applicants yet.
+        </div>
     `;
 
-    const apps = await db.collection("applications")
-        .where("jobId", "==", jobId).get();
+    return;
+}
 
-    let html = "";
+snapshot.forEach(doc => {
 
-    apps.forEach(a => {
-        html += `<div class="applicant-card">${a.data().applicantId}</div>`;
-    });
+    const app = doc.data();
 
-    document.getElementById("jobDetailApplicants").innerHTML = html;
+    container.innerHTML += `
+
+        <div class="applicant-card">
+
+            <p>
+                Applicant:
+                ${app.applicantId}
+            </p>
+
+            <button
+                onclick="messageApplicant('${app.applicantId}','${jobId}')">
+
+                Message Applicant
+
+            </button>
+
+        </div>
+
+    `;
+
+});
+```
+
+}
+
+// ================= APPLY =================
+
+function applyToJob(jobId) {
+
+```
+db.collection("applications")
+.add({
+
+    jobId,
+
+    applicantId: currentUser.uid,
+
+    createdAt: new Date().toISOString()
+
+})
+.then(() => {
+
+    alert("Application submitted");
+
+});
+```
+
 }
