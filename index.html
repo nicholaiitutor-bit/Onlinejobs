@@ -1,250 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Remote Work Hub SaaS</title>
+<div class="main-content">
 
-    <link rel="stylesheet" href="css/style.css">
+```
+<!-- DASHBOARD -->
+<section id="view-dashboard" class="view">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <h2>Employer Dashboard</h2>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-</head>
+    <div class="stats-grid">
 
-<body>
-
-<!-- ================= HOME ================= -->
-<div id="homePage">
-
-    <div class="hero-section">
-
-        <div class="navbar">
-            <div class="logo">RemoteWork Hub</div>
-
-            <div class="nav-buttons">
-                <button onclick="openAuth('login')">Login</button>
-                <button onclick="openAuth('register')">Register</button>
-            </div>
+        <div class="stat-card">
+            <h3 id="totalJobs">0</h3>
+            <p>Jobs Posted</p>
         </div>
 
-        <div class="hero-content">
-            <h1>Hire. Work. Earn.</h1>
-            <p>A modern remote hiring platform for employers and freelancers</p>
+        <div class="stat-card">
+            <h3 id="totalApplicants">0</h3>
+            <p>Applicants</p>
+        </div>
+
+        <div class="stat-card">
+            <h3 id="totalMessages">0</h3>
+            <p>Messages</p>
         </div>
 
     </div>
 
-</div>
+    <div class="chart-box">
 
-<!-- ================= AUTH MODAL ================= -->
-<div id="authModal" class="modal">
+        <h3>Job Analytics</h3>
 
-    <div class="modal-content">
-
-        <span onclick="closeAuth()" class="close-btn">&times;</span>
-
-        <h2 id="authTitle">Login</h2>
-
-        <input id="email" type="email" placeholder="Email">
-        <input id="password" type="password" placeholder="Password">
-
-        <select id="role">
-            <option value="jobseeker">Job Seeker</option>
-            <option value="employer">Employer</option>
-        </select>
-
-        <button onclick="login()">Login</button>
-        <button onclick="register()">Register</button>
-
-    </div>
-
-</div>
-
-<!-- ================= APP ================= -->
-<div id="appContainer">
-
-    <!-- ================= SIDEBAR ================= -->
-    <div class="sidebar">
-
-        <h2>Dashboard</h2>
-
-        <p id="userEmail"></p>
-
-        <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
-
-        <!-- EMPLOYER MENU -->
-        <div id="employerMenu">
-
-            <button onclick="showView('dashboard')">📊 Dashboard</button>
-            <button onclick="showView('postJob')">➕ Post Job</button>
-            <button onclick="showView('myJobs')">💼 My Jobs</button>
-            <button onclick="showView('messages')">💬 Messages</button>
-
-        </div>
-
-        <!-- JOBSEEKER MENU -->
-        <div id="jobseekerMenu">
-
-            <button onclick="showView('findJobs')">Find Jobs</button>
-            <button onclick="showView('applications')">Applications</button>
-            <button onclick="showView('profile')">Profile</button>
-            <button onclick="showView('messages')">Messages</button>
-
-        </div>
-
-        <!-- ADMIN MENU -->
-        <div id="adminMenu" style="display:none;">
-
-            <button onclick="showView('adminDashboard')">Admin Dashboard</button>
-            <button onclick="showView('adminUsers')">Users</button>
-            <button onclick="showView('adminJobs')">Jobs</button>
-
-        </div>
-
-        <button onclick="logout()">Logout</button>
-
-    </div>
-
-    <!-- ================= MAIN CONTENT ================= -->
-    <div class="main-content">
-
-        <!-- DASHBOARD -->
-        <section id="view-dashboard" class="view">
-            <h2>Employer Dashboard</h2>
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-                    <div class="chart-box">
-
-    <h3>Job Analytics</h3>
-
-    <canvas id="jobChart" width="600" height="250"></canvas>
-
-</div>
-                    <h3 id="totalJobs">0</h3>
-                    <p>Jobs Posted</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3 id="totalApplicants">0</h3>
-                    <p>Applicants</p>
-                </div>
-
-                <div class="stat-card">
-                    <h3 id="totalMessages">0</h3>
-                    <section id="view-messages" class="view">
-
-    <h2>Messages</h2>
-
-    <div class="messages-layout">
-
-        <div id="chatList"></div>
-
-        <div class="chat-panel">
-
-            <div id="chatMessages"></div>
-
-            <div class="chat-input-area">
-
-                <input id="messageInput" placeholder="Message...">
-
-                <button onclick="sendMessage()">
-                    Send
-                </button>
-
-            </div>
-
-        </div>
+        <canvas id="jobChart" width="600" height="250"></canvas>
 
     </div>
 
 </section>
 
-        <!-- POST JOB -->
-        <section id="view-postJob" class="view">
-            <h2>Post Job</h2>
+<!-- POST JOB -->
+<section id="view-postJob" class="view">
 
-            <input id="jobTitle" placeholder="Title">
-            <input id="jobCompany" placeholder="Company">
-            <input id="jobSalary" placeholder="Salary">
-            <textarea id="jobDescription" placeholder="Description"></textarea>
+    <h2>Post Job</h2>
 
-            <button onclick="postJob()">Post Job</button>
-        </section>
+    <input id="jobTitle" placeholder="Title">
+    <input id="jobCompany" placeholder="Company">
+    <input id="jobSalary" placeholder="Salary">
 
-        <!-- JOB DETAIL -->
-                    
-        <section id="view-jobDetail" class="view">
+    <textarea
+        id="jobDescription"
+        placeholder="Description">
+    </textarea>
 
-            <h2>Job Details</h2>
-            <section id="view-myJobs" class="view">
-
-```
-<h2>My Posted Jobs</h2>
-
-<div id="myJobsContainer"></div>
-```
+    <button onclick="postJob()">
+        Post Job
+    </button>
 
 </section>
 
-<button onclick="showView('myJobs')">My Jobs</button>
+<!-- MY JOBS -->
+<section id="view-myJobs" class="view">
+
     <h2>My Posted Jobs</h2>
 
     <div id="myJobsContainer"></div>
 
 </section>
 
-            <div id="jobDetailContainer"></div>
+<!-- JOB DETAIL -->
+<section id="view-jobDetail" class="view">
 
-            <hr>
+    <h2>Job Details</h2>
 
-            <h3>Applicants</h3>
-            <div id="jobDetailApplicants"></div>
+    <div id="jobDetailContainer"></div>
 
-        </section>
+    <hr>
 
-        <!-- FIND JOBS -->
-        <section id="view-findJobs" class="view">
-            <h2>Find Jobs</h2>
+    <h3>Applicants</h3>
 
-            <div id="jobsContainer"></div>
-        </section>
+    <div id="jobDetailApplicants"></div>
 
-        <!-- APPLICANTS -->
-        <section id="view-applicants" class="view">
-            <h2>Applicants</h2>
-            <div id="applicantsContainer"></div>
-        </section>
+</section>
 
-        <!-- APPLICATIONS -->
-        <section id="view-applications" class="view">
-            <h2>My Applications</h2>
-            <div id="applicationsContainer"></div>
-        </section>
+<!-- FIND JOBS -->
+<section id="view-findJobs" class="view">
 
-        <!-- PROFILE -->
-        <section id="view-profile" class="view">
-            <h2>Profile</h2>
+    <h2>Find Jobs</h2>
 
-            <input id="fullName" placeholder="Full Name">
-            <input id="jobTitleProfile" placeholder="Job Title">
-            <textarea id="bio" placeholder="Bio"></textarea>
+    <div id="jobsContainer"></div>
 
-            <input type="file" id="resumeUpload">
+</section>
 
-            <button onclick="saveProfile()">Save Profile</button>
-        </section>
+<!-- APPLICATIONS -->
+<section id="view-applications" class="view">
 
-        <!-- MESSAGES -->
-        <section id="view-messages" class="view">
+    <h2>My Applications</h2>
+
+    <div id="applicationsContainer"></div>
+
+</section>
+
+<!-- PROFILE -->
+<section id="view-profile" class="view">
+
+    <h2>Profile</h2>
+
+    <input id="fullName" placeholder="Full Name">
+
+    <input
+        id="jobTitleProfile"
+        placeholder="Job Title">
+
+    <textarea
+        id="bio"
+        placeholder="Bio">
+    </textarea>
+
+    <input
+        type="file"
+        id="resumeUpload">
+
+    <button onclick="saveProfile()">
+        Save Profile
+    </button>
+
+</section>
+
+<!-- MESSAGES -->
+<section id="view-messages" class="view">
 
     <h2>Messages</h2>
 
@@ -258,7 +138,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
             <div class="chat-input-area">
 
-                <input id="messageInput" placeholder="Message...">
+                <input
+                    id="messageInput"
+                    placeholder="Message...">
 
                 <button onclick="sendMessage()">
                     Send
@@ -272,52 +154,47 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 </section>
 
-        <!-- ADMIN DASHBOARD -->
-        <section id="view-adminDashboard" class="view">
-            <h2>Admin Dashboard</h2>
+<!-- ADMIN DASHBOARD -->
+<section id="view-adminDashboard" class="view">
 
-            <div class="stats-grid">
+    <h2>Admin Dashboard</h2>
 
-                <div class="stat-card">
-                    <h3 id="totalUsers">0</h3>
-                    <p>Users</p>
-                </div>
+    <div class="stats-grid">
 
-                <div class="stat-card">
-                    <h3 id="totalJobsAdmin">0</h3>
-                    <p>Jobs</p>
-                </div>
+        <div class="stat-card">
+            <h3 id="totalUsers">0</h3>
+            <p>Users</p>
+        </div>
 
-                <div class="stat-card">
-                    <h3 id="totalApplicationsAdmin">0</h3>
-                    <p>Applications</p>
-                </div>
+        <div class="stat-card">
+            <h3 id="totalJobsAdmin">0</h3>
+            <p>Jobs</p>
+        </div>
 
-            </div>
-        </section>
-
-        <section id="view-adminUsers" class="view">
-            <h2>Users</h2>
-            <div id="adminUsersContainer"></div>
-        </section>
-
-        <section id="view-adminJobs" class="view">
-            <h2>Jobs</h2>
-            <div id="adminJobsContainer"></div>
-        </section>
+        <div class="stat-card">
+            <h3 id="totalApplicationsAdmin">0</h3>
+            <p>Applications</p>
+        </div>
 
     </div>
+
+</section>
+
+<section id="view-adminUsers" class="view">
+
+    <h2>Users</h2>
+
+    <div id="adminUsersContainer"></div>
+
+</section>
+
+<section id="view-adminJobs" class="view">
+
+    <h2>Jobs</h2>
+
+    <div id="adminJobsContainer"></div>
+
+</section>
+```
+
 </div>
-
-<!-- ================= SCRIPTS ================= -->
-<script src="js/firebase-config.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/app.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/jobs.js"></script>
-<script src="js/chat.js"></script>
-<script src="js/profile.js"></script>
-<script src="js/admin.js"></script>
-
-</body>
-</html>
